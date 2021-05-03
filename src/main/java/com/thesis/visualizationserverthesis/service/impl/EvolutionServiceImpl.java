@@ -1,11 +1,17 @@
 package com.thesis.visualizationserverthesis.service.impl;
 
 import com.thesis.visualizationserverthesis.model.api.*;
+import com.thesis.visualizationserverthesis.model.entity.WeekDate;
+import com.thesis.visualizationserverthesis.model.entity.evolution.CEMFemaleWeeks;
+import com.thesis.visualizationserverthesis.model.entity.evolution.CEMMaleWeeks;
+import com.thesis.visualizationserverthesis.model.entity.impact.CEMMaleDays;
+import com.thesis.visualizationserverthesis.repository.WeekDateRepository;
 import com.thesis.visualizationserverthesis.repository.evolution.CEMFemaleWeeksRepository;
 import com.thesis.visualizationserverthesis.repository.evolution.CEMMaleWeeksRepository;
 import com.thesis.visualizationserverthesis.repository.impact.CEMFemaleDaysRepository;
 import com.thesis.visualizationserverthesis.repository.impact.CEMMaleDaysRepository;
 import com.thesis.visualizationserverthesis.service.EvolutionService;
+import com.thesis.visualizationserverthesis.utils.ICEMWeeks;
 import com.thesis.visualizationserverthesis.utils.IUbigeoCountProjection;
 import com.thesis.visualizationserverthesis.utils.UbigeoCount;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +35,8 @@ public class EvolutionServiceImpl implements EvolutionService {
 
     private final CEMFemaleDaysRepository cemFemaleDaysRepository;
     private final CEMMaleDaysRepository cemMaleDaysRepository;
+
+    private final WeekDateRepository weekDateRepository;
 
     public List<CasesByUbigeoForMonth> getCasesByUbigeoForMonth(EvolutionCasesByMonthFilter filter){
         // por cada mes y año debo hacer una agregación por departamento o provincias de un departamento
@@ -117,6 +125,28 @@ public class EvolutionServiceImpl implements EvolutionService {
         return response;
     }
     public List<DetailedCasesByWeek> getDetailedCasesByWeek(EvolutionDetailedCasesFilter filter){
-        return null;
+        Long initialWeek = weekDateRepository.getWeekFromDate(filter.getStartDate());
+        Long finalWeek = weekDateRepository.getWeekFromDate(filter.getEndDate());
+
+        List<DetailedCasesByWeek> response = new ArrayList<>();
+
+        for(Long week = initialWeek; week<=finalWeek ; week++){
+            //obtenemos las fechas por semana para el objeto,
+            WeekDate weekEntity = weekDateRepository.findById(week).get();
+            //agregamos casos por semana para un estado o una provincia
+            if(filter.getFilterBy().equals("PROVINCE")) {
+                ICEMWeeks maleCases = cemMaleWeeksRepository.getAggregatedForWeekAndProvince(week,filter).orElse(null);
+                ICEMWeeks femaleCases = cemFemaleWeeksRepository.getAggregatedForWeekAndProvince(week,filter).orElse(null);
+                response.add(new DetailedCasesByWeek(weekEntity,maleCases,femaleCases));
+            }
+            else if(filter.getFilterBy().equals("STATE")) {
+                ICEMWeeks maleCases = cemMaleWeeksRepository.getAggregatedForWeekAndState(week,filter).orElse(null);
+                ICEMWeeks femaleCases = cemFemaleWeeksRepository.getAggregatedForWeekAndState(week,filter).orElse(null);
+                response.add(new DetailedCasesByWeek(weekEntity,maleCases,femaleCases));
+            }
+            //Adicionamos al response
+        }
+
+        return response;
     }
 }
