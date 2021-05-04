@@ -2,9 +2,6 @@ package com.thesis.visualizationserverthesis.service.impl;
 
 import com.thesis.visualizationserverthesis.model.api.*;
 import com.thesis.visualizationserverthesis.model.entity.WeekDate;
-import com.thesis.visualizationserverthesis.model.entity.evolution.CEMFemaleWeeks;
-import com.thesis.visualizationserverthesis.model.entity.evolution.CEMMaleWeeks;
-import com.thesis.visualizationserverthesis.model.entity.impact.CEMMaleDays;
 import com.thesis.visualizationserverthesis.repository.WeekDateRepository;
 import com.thesis.visualizationserverthesis.repository.evolution.CEMFemaleWeeksRepository;
 import com.thesis.visualizationserverthesis.repository.evolution.CEMMaleWeeksRepository;
@@ -13,18 +10,14 @@ import com.thesis.visualizationserverthesis.repository.impact.CEMMaleDaysReposit
 import com.thesis.visualizationserverthesis.service.EvolutionService;
 import com.thesis.visualizationserverthesis.utils.ICEMWeeks;
 import com.thesis.visualizationserverthesis.utils.IUbigeoCountProjection;
-import com.thesis.visualizationserverthesis.utils.UbigeoCount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

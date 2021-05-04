@@ -4,14 +4,12 @@ import com.thesis.visualizationserverthesis.model.api.EvolutionCasesByMonthFilte
 import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesFilter;
 import com.thesis.visualizationserverthesis.model.entity.impact.CEMFemaleDays;
 import com.thesis.visualizationserverthesis.utils.IUbigeoCountProjection;
-import com.thesis.visualizationserverthesis.utils.UbigeoCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 public interface CEMFemaleDaysRepository extends JpaRepository<CEMFemaleDays,Long> {
 

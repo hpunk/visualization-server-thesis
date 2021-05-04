@@ -2,13 +2,11 @@ package com.thesis.visualizationserverthesis.repository.evolution;
 
 import com.thesis.visualizationserverthesis.model.api.EvolutionDetailedCasesFilter;
 import com.thesis.visualizationserverthesis.model.entity.evolution.CEMFemaleWeeks;
-import com.thesis.visualizationserverthesis.model.entity.evolution.CEMMaleWeeks;
 import com.thesis.visualizationserverthesis.utils.ICEMWeeks;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CEMFemaleWeeksRepository extends JpaRepository<CEMFemaleWeeks,Long> {

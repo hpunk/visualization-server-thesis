@@ -1,11 +1,9 @@
 package com.thesis.visualizationserverthesis.repository.impact;
 
 import com.thesis.visualizationserverthesis.model.api.PreventiveActionsFilter;
-import com.thesis.visualizationserverthesis.model.entity.base.PreventiveAction;
 import com.thesis.visualizationserverthesis.model.entity.impact.PreventiveActionEighteen;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
