@@ -64,7 +64,7 @@ public class EvolutionServiceImpl implements EvolutionService {
             item.setCasesByUbigeo(casesByUbigeo);
             tempDate = tempDate.plusMonths(1);
             response.add(item);
-        } while(tempDate.getMonth() != filter.getEndDate().getMonth() || tempDate.getYear() != filter.getEndDate().getYear());
+        } while(tempDate.getMonth().getValue() <= filter.getEndDate().getMonth().getValue() || tempDate.getYear() != filter.getEndDate().getYear());
         return response;
     }
 
