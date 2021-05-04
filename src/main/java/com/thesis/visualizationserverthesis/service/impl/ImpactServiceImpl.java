@@ -31,6 +31,7 @@ public class ImpactServiceImpl implements ImpactService {
 
     @Override
     public List<PreventiveAction> searchPreventiveActions(PreventiveActionsFilter filter){
+        log.info("el filter, {}",filter);
         val response = new ArrayList<PreventiveAction>();
         if(filter.getStartDate().getYear()<=2020 && filter.getEndDate().getYear()>=2020){
             val listTwenty = preventiveActionTwentyRepository.searchPreventiveActions(filter)
