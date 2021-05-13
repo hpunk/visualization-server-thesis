@@ -15,9 +15,9 @@ public interface CEMFemaleDaysRepository extends JpaRepository<CEMFemaleDays,Lon
 
     @Query(value="select c.* from cem_female_victim_days c " +
             "where c.case_date >= :startDate and c.case_date <= :lastDate " +
-            "and ( :#{#filter.state} is null or :#{#filter.state} = c.state_peru ) " +
-            "and ( :#{#filter.province} is null or :#{#filter.province} = c.province_peru ) " +
-            "and ( :#{#filter.district} is null or :#{#filter.district} = c.district_peru ) " +
+            "and ( :#{#filter.state} = 0 or :#{#filter.state} = c.state_peru ) " +
+            "and ( :#{#filter.province} = 0 or :#{#filter.province} = c.province_peru ) " +
+            "and ( :#{#filter.district} = 0 or :#{#filter.district} = c.district_peru ) " +
             "order by c.case_date asc", nativeQuery = true)
     List<CEMFemaleDays> searchCasesForImpact(@Param("filter")ImpactViolenceCasesFilter filter,@Param("startDate") LocalDate startDate,@Param("lastDate") LocalDate lastDate);
 

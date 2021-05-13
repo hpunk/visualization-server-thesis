@@ -12,9 +12,9 @@ public interface PreventiveActionNineteenRepository extends JpaRepository<Preven
 
     @Query(value ="select p.* from app_2019 p " +
             "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
-            "and (:#{#filter.state} is null or (:#{#filter.state} = p.state_code) ) " +
-            "and (:#{#filter.province} is null or (:#{#filter.province} = p.province_code )) " +
-            "and (:#{#filter.district} is null or (:#{#filter.district} = p.district_code )) " +
+            "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
+            "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) " +
+            "and (:#{#filter.district} = 0 or (:#{#filter.district} = p.district_code )) " +
             "order by p.start_date desc" , nativeQuery = true)
     List<PreventiveActionNineteen> searchPreventiveActions(@Param("filter") PreventiveActionsFilter filter);
 }
