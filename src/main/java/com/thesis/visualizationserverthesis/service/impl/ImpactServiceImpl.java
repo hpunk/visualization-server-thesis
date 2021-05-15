@@ -2,11 +2,13 @@ package com.thesis.visualizationserverthesis.service.impl;
 
 import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesDTO;
 import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesFilter;
+import com.thesis.visualizationserverthesis.model.api.PreventiveActionSearchResponse;
 import com.thesis.visualizationserverthesis.model.api.PreventiveActionsFilter;
-import com.thesis.visualizationserverthesis.model.entity.base.PreventiveAction;
 import com.thesis.visualizationserverthesis.model.entity.impact.*;
 import com.thesis.visualizationserverthesis.repository.impact.*;
 import com.thesis.visualizationserverthesis.service.ImpactService;
+import com.thesis.visualizationserverthesis.utils.AggregatedAppAssistants;
+import com.thesis.visualizationserverthesis.utils.PreventiveActionCounter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -23,39 +25,33 @@ import java.util.stream.Collectors;
 public class ImpactServiceImpl implements ImpactService {
     private final CEMFemaleDaysRepository cemFemaleDaysRepository;
     private final CEMMaleDaysRepository cemMaleDaysRepository;
-
-    private final PreventiveActionEighteenRepository preventiveActionEighteenRepository;
-    private final PreventiveActionNineteenRepository preventiveActionNineteenRepository;
-    private final PreventiveActionSeventeenRepository preventiveActionSeventeenRepository;
-    private final PreventiveActionTwentyRepository preventiveActionTwentyRepository;
+    private final PreventiveActionRepository preventiveActionRepository;
 
     @Override
-    public List<PreventiveAction> searchPreventiveActions(PreventiveActionsFilter filter){
-        log.info("el filter, {}",filter);
-        val response = new ArrayList<PreventiveAction>();
-        if(filter.getStartDate().getYear()<=2020 && filter.getEndDate().getYear()>=2020){
-            val listTwenty = preventiveActionTwentyRepository.searchPreventiveActions(filter)
-                    .stream().map(PreventiveActionTwenty::toPreventiveAction).collect(Collectors.toList());
-            response.addAll(listTwenty);
+    public PreventiveActionSearchResponse searchPreventiveActions(PreventiveActionsFilter filter){
+        val response = new PreventiveActionSearchResponse();
+        if(filter.getDistrict() != 0L){
+            val aggregatedAssistants = preventiveActionRepository.getAggregatedAssistantsForTimeAndStateAndProvinceAndDistrict(filter);
+            val preventiveActions = preventiveActionRepository.countPreventiveActionsForTimeAndUbigeo(filter);
+            response.setAggregatedAssistants(new AggregatedAppAssistants(aggregatedAssistants));
+            response.setPreventiveActions(preventiveActions.stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+        } else if(filter.getProvince() != 0L){
+            val aggregatedAssistants = preventiveActionRepository.getAggregatedAssistantsForTimeAndStateAndProvince(filter);
+            val preventiveActions = preventiveActionRepository.countPreventiveActionsForTimeAndProvince(filter);
+            response.setAggregatedAssistants(new AggregatedAppAssistants(aggregatedAssistants));
+            response.setPreventiveActions(preventiveActions.stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+        } else if(filter.getState() != 0L){
+            val aggregatedAssistants = preventiveActionRepository.getAggregatedAssistantsForTimeAndState(filter);
+            val preventiveActions = preventiveActionRepository.countPreventiveActionsForTimeAndState(filter);
+            response.setAggregatedAssistants(new AggregatedAppAssistants(aggregatedAssistants));
+            response.setPreventiveActions(preventiveActions.stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+        } else {
+            val aggregatedAssistants = preventiveActionRepository.getAggregatedAssistantsForTime(filter);
+            val preventiveActions = preventiveActionRepository.countPreventiveActionsForTime(filter);
+            response.setAggregatedAssistants(new AggregatedAppAssistants(aggregatedAssistants));
+            response.setPreventiveActions(preventiveActions.stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
         }
-        if(filter.getStartDate().getYear()<=2019 && filter.getEndDate().getYear()>=2019){
-            val listNineteen = preventiveActionNineteenRepository.searchPreventiveActions(filter)
-                    .stream().map(PreventiveActionNineteen::toPreventiveAction).collect(Collectors.toList());
-            response.addAll(listNineteen);
-        }
-        if(filter.getStartDate().getYear()<=2018 && filter.getEndDate().getYear()>=2018){
-            val listEighteen = preventiveActionEighteenRepository.searchPreventiveActions(filter)
-                    .stream().map(PreventiveActionEighteen::toPreventiveAction).collect(Collectors.toList());
-            response.addAll(listEighteen);
-        }
-        if(filter.getStartDate().getYear()==2017){
-            val listSeventeen = preventiveActionSeventeenRepository.searchPreventiveActions(filter)
-                    .stream().map(PreventiveActionSeventeen::toPreventiveAction).collect(Collectors.toList());
-            response.addAll(listSeventeen);
-        }
-
         return response;
-
     }
 
     private List<LocalDate> prepareDateArrayForCEMCases(ImpactViolenceCasesFilter filter){

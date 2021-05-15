@@ -1,16 +1,20 @@
-package com.thesis.visualizationserverthesis.model.entity.base;
+package com.thesis.visualizationserverthesis.model.entity.impact;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name="app")
 public class PreventiveAction {
+    @Id
+    @Column(name="app_id")
+    private Long appId;
     @Column(name="cem_code")
     private String CEMCode;
     @Column(name="start_date")
@@ -171,5 +175,4 @@ public class PreventiveAction {
     private Integer mayM;
     @Column(name="may_v")
     private Integer mayV;
-
 }
