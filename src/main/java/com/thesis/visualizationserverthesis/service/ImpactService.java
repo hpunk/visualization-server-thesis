@@ -5,7 +5,9 @@ import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesFilter;
 import com.thesis.visualizationserverthesis.model.api.PreventiveActionSearchResponse;
 import com.thesis.visualizationserverthesis.model.api.PreventiveActionsFilter;
 
+import java.text.ParseException;
+
 public interface ImpactService {
     PreventiveActionSearchResponse searchPreventiveActions(PreventiveActionsFilter filter);
-    ImpactViolenceCasesDTO getViolenceCasesForImpact(ImpactViolenceCasesFilter filter);
+    ImpactViolenceCasesDTO getViolenceCasesForImpact(ImpactViolenceCasesFilter filter) throws ParseException;
 }

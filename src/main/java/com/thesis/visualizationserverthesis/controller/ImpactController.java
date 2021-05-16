@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.Map;
 
 @RestController
@@ -27,7 +28,7 @@ public class ImpactController extends BaseController{
     }
 
     @GetMapping("/impact/violence-cases")
-    public ImpactViolenceCasesDTO getViolenceCasesForImpact(@RequestParam Map<String,Object> searchParams){
+    public ImpactViolenceCasesDTO getViolenceCasesForImpact(@RequestParam Map<String,Object> searchParams) throws ParseException {
         val filter = mapQueryTo(searchParams, ImpactViolenceCasesFilter.class);
         return impactService.getViolenceCasesForImpact(filter);
     }

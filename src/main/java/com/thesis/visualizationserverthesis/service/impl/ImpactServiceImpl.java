@@ -4,19 +4,26 @@ import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesDTO;
 import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesFilter;
 import com.thesis.visualizationserverthesis.model.api.PreventiveActionSearchResponse;
 import com.thesis.visualizationserverthesis.model.api.PreventiveActionsFilter;
-import com.thesis.visualizationserverthesis.model.entity.impact.*;
-import com.thesis.visualizationserverthesis.repository.impact.*;
+import com.thesis.visualizationserverthesis.repository.impact.CEMFemaleDaysRepository;
+import com.thesis.visualizationserverthesis.repository.impact.CEMMaleDaysRepository;
+import com.thesis.visualizationserverthesis.repository.impact.PreventiveActionRepository;
 import com.thesis.visualizationserverthesis.service.ImpactService;
 import com.thesis.visualizationserverthesis.utils.AggregatedAppAssistants;
+import com.thesis.visualizationserverthesis.utils.CemCountImpact;
 import com.thesis.visualizationserverthesis.utils.PreventiveActionCounter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,32 +61,53 @@ public class ImpactServiceImpl implements ImpactService {
         return response;
     }
 
-    private List<LocalDate> prepareDateArrayForCEMCases(ImpactViolenceCasesFilter filter){
+    private List<LocalDate> prepareDateArrayForCEMCases(ImpactViolenceCasesFilter filter) throws ParseException {
         val dates = new ArrayList<LocalDate>();
         for(int i = 0; i < filter.getDaysBefore(); i++){
             val difference = filter.getDaysBefore()-i;
-            dates.add(filter.getAppDate().minusDays(difference));
+            dates.add(filter.getAppDateStart().minusDays(difference));
         }
-        dates.add(filter.getAppDate());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date firstDate = sdf.parse(filter.getAppDateStart().toString());
+        Date secondDate = sdf.parse(filter.getAppDateEnd().toString());
+
+        long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) + 1l;
+
+        for(int i = 0; i<Long.valueOf(diff).intValue(); i++){
+            val increment =  i;
+            dates.add(filter.getAppDateStart().plusDays(increment));
+        }
         for(int i = 0; i < filter.getDaysAfter(); i++){
             val increment = 1L+i;
-            dates.add(filter.getAppDate().plusDays(increment));
+            dates.add(filter.getAppDateEnd().plusDays(increment));
         }
         return dates;
     }
 
     @Override
-    public ImpactViolenceCasesDTO getViolenceCasesForImpact(ImpactViolenceCasesFilter filter){
+    public ImpactViolenceCasesDTO getViolenceCasesForImpact(ImpactViolenceCasesFilter filter) throws ParseException {
         val dates = prepareDateArrayForCEMCases(filter);
 
         val startDate = dates.get(0);
         val lastDate = dates.get(dates.size()-1);
-        val maleCases = new ArrayList<CEMMaleDays>();
-        val femaleCases = new ArrayList<CEMFemaleDays>();
-        maleCases.addAll(cemMaleDaysRepository.searchCasesForImpact(filter,startDate,lastDate));
-        femaleCases.addAll(cemFemaleDaysRepository.searchCasesForImpact(filter,startDate,lastDate));
-
-        return new ImpactViolenceCasesDTO(dates,maleCases,femaleCases,filter.getAppDate());
+        val maleCases = new ArrayList<CemCountImpact>();
+        val femaleCases = new ArrayList<CemCountImpact>();
+        if(filter.getDistrict() != 0L){
+            maleCases.addAll(cemMaleDaysRepository.searchCasesForImpactDistrict(filter,startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+            femaleCases.addAll(cemFemaleDaysRepository.searchCasesForImpactDistrict(filter,startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+        } else if(filter.getProvince() != 0L){
+            maleCases.addAll(cemMaleDaysRepository.searchCasesForImpactProvince(filter,startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+            femaleCases.addAll(cemFemaleDaysRepository.searchCasesForImpactProvince(filter,startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+        } else if(filter.getState() != 0L) {
+            maleCases.addAll(cemMaleDaysRepository.searchCasesForImpactState(filter,startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+            femaleCases.addAll(cemFemaleDaysRepository.searchCasesForImpactState(filter,startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+        } else {
+            maleCases.addAll(cemMaleDaysRepository.searchCasesForImpact(startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+            femaleCases.addAll(cemFemaleDaysRepository.searchCasesForImpact(startDate,lastDate).stream().map(CemCountImpact::new).collect(Collectors.toList()));
+        }
+        return new ImpactViolenceCasesDTO(dates,maleCases,femaleCases,filter.getAppDateStart());
 
     }
 }

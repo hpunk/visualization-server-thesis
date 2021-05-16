@@ -1,7 +1,6 @@
 package com.thesis.visualizationserverthesis.model.api;
 
-import com.thesis.visualizationserverthesis.model.entity.impact.CEMFemaleDays;
-import com.thesis.visualizationserverthesis.model.entity.impact.CEMMaleDays;
+import com.thesis.visualizationserverthesis.utils.CemCountImpact;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.val;
@@ -20,7 +19,7 @@ public class ImpactViolenceCasesDTO {
     private List<Long> psychologicalV;
     private LocalDate appDate;
 
-    public ImpactViolenceCasesDTO(List<LocalDate> dates, List<CEMMaleDays> maleCases, List<CEMFemaleDays> femaleCases, LocalDate appDate){
+    public ImpactViolenceCasesDTO(List<LocalDate> dates, List<CemCountImpact> maleCases, List<CemCountImpact> femaleCases, LocalDate appDate){
         this.setDates(dates);
 
         val physicalList = new ArrayList<Long>();
@@ -30,7 +29,6 @@ public class ImpactViolenceCasesDTO {
 
         int maleIndex = 0;
         int femaleIndex = 0;
-
         for(int i=0; i< dates.size();i++){
             Long physical = 0L;
             Long sexual = 0L;
