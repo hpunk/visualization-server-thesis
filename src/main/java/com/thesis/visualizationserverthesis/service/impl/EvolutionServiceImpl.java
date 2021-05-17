@@ -32,6 +32,7 @@ public class EvolutionServiceImpl implements EvolutionService {
     private final WeekDateRepository weekDateRepository;
 
     public List<CasesByUbigeoForMonth> getCasesByUbigeoForMonth(EvolutionCasesByMonthFilter filter){
+        log.info("el filter {}",filter);
         // por cada mes y año debo hacer una agregación por departamento o provincias de un departamento
         LocalDate tempDate = filter.getStartDate().withDayOfMonth(1);
         List<CasesByUbigeoForMonth> response = new ArrayList<>();

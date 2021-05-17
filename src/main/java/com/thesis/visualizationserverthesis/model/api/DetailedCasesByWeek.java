@@ -1,5 +1,6 @@
 package com.thesis.visualizationserverthesis.model.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thesis.visualizationserverthesis.model.entity.WeekDate;
 import com.thesis.visualizationserverthesis.utils.ICEMWeeks;
 import lombok.Data;
@@ -10,48 +11,91 @@ import java.time.LocalDate;
 public class DetailedCasesByWeek {
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @JsonProperty("man_physical_violence")
     private Long manPhysical;
+    @JsonProperty("man_economical_violence")
     private Long manEconomical;
+    @JsonProperty("man_sexual_violence")
     private Long manSexual;
+    @JsonProperty("man_psychological_violence")
     private Long manPsychological;
+    @JsonProperty("man_first_time")
     private Long manFirstTime;
+    @JsonProperty("man_aggr_alcohol")
     private Long manAggrAlcohol;
+    @JsonProperty("man_aggr_drugs")
     private Long manAggrDrug;
+    @JsonProperty("man_vict_alcohol")
     private Long manVictAlcohol;
+    @JsonProperty("man_vict_drugs")
     private Long manVictDrug;
+    @JsonProperty("man_vict_lgtbi")
     private Long manVictLgtbi;
+    @JsonProperty("man_vict_disability")
     private Long manVictDisab;
+    @JsonProperty("man_inf")
     private Long manInf;
+    @JsonProperty("man_nin")
     private Long manNin;
+    @JsonProperty("man_adol")
     private Long manAdol;
+    @JsonProperty("man_adol_t")
     private Long manAdolT;
+    @JsonProperty("man_jov")
     private Long manJov;
+    @JsonProperty("man_adul")
     private Long manAdul;
+    @JsonProperty("man_mayo")
     private Long manMayo;
+    @JsonProperty("man_family")
     private Long manFamily;
+    @JsonProperty("man_love")
     private Long manLove;
+    @JsonProperty("man_no_relation")
     private Long manNoRelation;
 
+    @JsonProperty("woman_physical_violence")
     private Long womanPhysical;
+    @JsonProperty("woman_economical_violence")
     private Long womanEconomical;
+    @JsonProperty("woman_sexual_violence")
     private Long womanSexual;
+    @JsonProperty("woman_psychological_violence")
     private Long womanPsychological;
+    @JsonProperty("woman_first_time")
     private Long womanFirstTime;
+    @JsonProperty("woman_aggr_alcohol")
     private Long womanAggrAlcohol;
+    @JsonProperty("woman_aggr_drugs")
     private Long womanAggrDrug;
+    @JsonProperty("woman_vict_alcohol")
     private Long womanVictAlcohol;
+    @JsonProperty("woman_vict_drugs")
     private Long womanVictDrug;
+    @JsonProperty("woman_vict_lgtbi")
     private Long womanVictLgtbi;
+    @JsonProperty("woman_vict_disability")
     private Long womanVictDisab;
+    @JsonProperty("woman_inf")
     private Long womanInf;
+    @JsonProperty("woman_nin")
     private Long womanNin;
+    @JsonProperty("woman_adol")
     private Long womanAdol;
+    @JsonProperty("woman_adol_t")
     private Long womanAdolT;
+    @JsonProperty("woman_jov")
     private Long womanJov;
+    @JsonProperty("woman_adul")
     private Long womanAdul;
+    @JsonProperty("woman_mayo")
     private Long womanMayo;
+    @JsonProperty("woman_family")
     private Long womanFamily;
+    @JsonProperty("woman_love")
     private Long womanLove;
+    @JsonProperty("woman_no_relation")
     private Long womanNoRelation;
 
     public DetailedCasesByWeek(WeekDate week, ICEMWeeks maleCases, ICEMWeeks femaleCases){
