@@ -16,6 +16,7 @@
 	<description>Visualization server for thesis project GAAV</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<start-class>com.thesis.visualizationserverthesis.VisualizationServerThesisApplication</start-class>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
