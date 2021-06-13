@@ -12,11 +12,34 @@
 	<artifactId>visualization-server-thesis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>visualization-server-thesis</name>
+	<packaging>jar</packaging>
 	<description>Visualization server for thesis project GAAV</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>2020.0.1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.cloud</groupId>
+				<artifactId>spring-cloud-gcp-dependencies</artifactId>
+				<version>2.0.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>spring-cloud-gcp-starter</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
