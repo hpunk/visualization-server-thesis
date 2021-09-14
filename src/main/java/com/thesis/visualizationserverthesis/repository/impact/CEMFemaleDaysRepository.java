@@ -51,10 +51,10 @@ public interface CEMFemaleDaysRepository extends JpaRepository<CEMFemaleDays,Lon
     @Query(value="select c.province_peru as ubigeo, sum(c.physical_v_count)+sum(c.sexual_v_count)+sum(c.economical_v_count)+sum(c.psychological_v_count) as count " +
             "from cem_female_victim_days c " +
             "where c.case_date >= :firstDate and c.case_date < :lastDate " +
-            "and :#{#filter.state} = c.state_peru " +
+            "and c.state_peru = :state " +
             "group by c.province_peru " +
             "order by c.province_peru asc", nativeQuery = true)
-    List<IUbigeoCountProjection> aggregateByProvince(@Param("firstDate") LocalDate start, @Param("lastDate") LocalDate end, @Param("filter") EvolutionCasesByMonthFilter filter);
+    List<IUbigeoCountProjection> aggregateByProvince(@Param("firstDate") LocalDate start, @Param("lastDate") LocalDate end, @Param("state") Long state);
 
     @Query(value="select c.state_peru as ubigeo, sum(c.physical_v_count)+sum(c.sexual_v_count)+sum(c.economical_v_count)+sum(c.psychological_v_count) as count " +
             "from cem_female_victim_days c " +

@@ -31,8 +31,8 @@ public class EvolutionServiceImpl implements EvolutionService {
 
     private final WeekDateRepository weekDateRepository;
 
+    @Override
     public List<CasesByUbigeoForMonth> getCasesByUbigeoForMonth(EvolutionCasesByMonthFilter filter){
-        log.info("el filter {}",filter);
         // por cada mes y año debo hacer una agregación por departamento o provincias de un departamento
         LocalDate tempDate = filter.getStartDate().withDayOfMonth(1);
         List<CasesByUbigeoForMonth> response = new ArrayList<>();
@@ -51,8 +51,8 @@ public class EvolutionServiceImpl implements EvolutionService {
                 casesByUbigeo.addAll(generateCasesByUbigeo(femaleList,maleList));
 
             } else if(filter.getFilterBy().equals("PROVINCE")){
-                val femaleList = cemFemaleDaysRepository.aggregateByProvince(firstDayMonth,firstDayNextMonth,filter);
-                val maleList = cemMaleDaysRepository.aggregateByProvince(firstDayMonth,firstDayNextMonth,filter);
+                val femaleList = cemFemaleDaysRepository.aggregateByProvince(firstDayMonth,firstDayNextMonth,filter.getState());
+                val maleList = cemMaleDaysRepository.aggregateByProvince(firstDayMonth,firstDayNextMonth,filter.getState());
                 casesByUbigeo.addAll(generateCasesByUbigeo(femaleList,maleList));
             }
             item.setCasesByUbigeo(casesByUbigeo);
@@ -70,21 +70,21 @@ public class EvolutionServiceImpl implements EvolutionService {
         while(maleIndex!=maleList.size() || femaleIndex!=femaleList.size()){
             CaseByUbigeo item = new CaseByUbigeo();
             if(maleIndex != maleList.size() && femaleIndex!=femaleList.size()) {
-                if(maleList.get(maleIndex).getUbigeo() == femaleList.get(femaleIndex).getUbigeo()){
+                val maleUbigeo = maleList.get(maleIndex).getUbigeo();
+                val femaleUbigeo = femaleList.get(femaleIndex).getUbigeo();
+                if(maleUbigeo.equals(femaleUbigeo)){
                     item.setUbigeo(femaleList.get(femaleIndex).getUbigeo());
                     maleIndex++;
                     femaleIndex++;
                 } else {
-                    if(maleList.get(maleIndex).getUbigeo() < femaleList.get(femaleIndex).getUbigeo()){
-                        item.setUbigeo(maleList.get(maleIndex).getUbigeo());
+                    if(maleUbigeo < femaleUbigeo){
+                        item.setUbigeo(maleUbigeo);
                         maleIndex++;
                     } else {
-                        item.setUbigeo(femaleList.get(femaleIndex).getUbigeo());
+                        item.setUbigeo(femaleUbigeo);
                         femaleIndex++;
                     }
                 }
-                //item.setUbigeo(maleList.get(maleIndex).getUbigeo() >= femaleList.get(femaleIndex).getUbigeo() ? femaleList.get(femaleIndex).getUbigeo() : maleList.get(maleIndex).getUbigeo());
-
             }
             else if(maleIndex != maleList.size()) {
                 item.setUbigeo(maleList.get(maleIndex).getUbigeo());
@@ -102,13 +102,13 @@ public class EvolutionServiceImpl implements EvolutionService {
         femaleIndex = 0;
 
         for(int i=0; i< response.size(); i++){
-            if(femaleIndex != femaleList.size() && femaleList.get(femaleIndex).getUbigeo() == response.get(i).getUbigeo()){
+            if(femaleIndex != femaleList.size() && femaleList.get(femaleIndex).getUbigeo().equals(response.get(i).getUbigeo())){
                 response.get(i).setCasesFemale(femaleList.get(femaleIndex).getCount());
                 femaleIndex++;
             } else {
                 response.get(i).setCasesFemale(0L);
             }
-            if(maleIndex != maleList.size() && maleList.get(maleIndex).getUbigeo() == response.get(i).getUbigeo()){
+            if(maleIndex != maleList.size() && maleList.get(maleIndex).getUbigeo().equals(response.get(i).getUbigeo())){
                 response.get(i).setCasesMale(maleList.get(maleIndex).getCount());
                 maleIndex ++;
             } else {
@@ -118,6 +118,8 @@ public class EvolutionServiceImpl implements EvolutionService {
 
         return response;
     }
+
+    @Override
     public List<DetailedCasesByWeek> getDetailedCasesByWeek(EvolutionDetailedCasesFilter filter){
         Long initialWeek = weekDateRepository.getWeekFromDate(filter.getStartDate());
         Long finalWeek = weekDateRepository.getWeekFromDate(filter.getEndDate());
