@@ -1,6 +1,7 @@
 package com.thesis.visualizationserverthesis.service;
 
 import com.thesis.visualizationserverthesis.model.api.EvolutionCasesByMonthFilter;
+import com.thesis.visualizationserverthesis.model.api.EvolutionDetailedCasesFilter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.Before;
@@ -143,5 +144,42 @@ public class EvolutionServiceImplTest {
         val maleCases = response.get(0).getCasesByUbigeo().get(0).getCasesMale();
         val expectedMaleCases = 0L;
         assertEquals(Optional.ofNullable(expectedMaleCases).get(), maleCases);
+    }
+
+    @Test
+    public void getDetailedCasesByWeekTestWithCasesInDateRangeAndFilteringByState(){
+        //given
+        EvolutionDetailedCasesFilter filter = new EvolutionDetailedCasesFilter();
+        filter.setStartDate(LocalDate.of(2017,1,1));
+        filter.setEndDate(LocalDate.of(2017,3,30));
+        filter.setState(3L);
+        filter.setFilterBy("STATE");
+
+        //when
+        val response = evolutionService.getDetailedCasesByWeek(filter);
+
+        //then
+        log.info("el response {}",response);
+        assertEquals(Optional.of(1L).get(),response.get(0).getManPsychological());
+        assertEquals(Optional.of(1L).get(),response.get(1).getManPsychological());
+    }
+
+    @Test
+    public void getDetailedCasesByWeekTestWithCasesInDateRangeAndFilteringByProvince(){
+        //given
+        EvolutionDetailedCasesFilter filter = new EvolutionDetailedCasesFilter();
+        filter.setStartDate(LocalDate.of(2017,1,1));
+        filter.setEndDate(LocalDate.of(2017,3,30));
+        filter.setState(3L);
+        filter.setProvince(302L);
+        filter.setFilterBy("PROVINCE");
+
+        //when
+        val response = evolutionService.getDetailedCasesByWeek(filter);
+
+        //then
+        log.info("el response {}",response);
+        assertEquals(Optional.of(5L).get(),response.get(0).getWomanPsychological());
+        assertEquals(Optional.of(1L).get(),response.get(0).getWomanSexual());
     }
 }
