@@ -22,7 +22,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
             "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) " +
             "and (:#{#filter.district} = 0 or (:#{#filter.district} = p.district_code )) " +
@@ -40,7 +40,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
             "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) " +
             "group by p.action_code, p.state_code, p.province_code " +
@@ -57,7 +57,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
             "group by p.action_code, p.state_code " +
             "order by count desc" , nativeQuery = true)
@@ -73,7 +73,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "group by p.action_code " +
             "order by count desc" , nativeQuery = true)
     List<IPreventiveActionCounterProjection> countPreventiveActionsForTime(@Param("filter") PreventiveActionsFilter filter);
@@ -87,7 +87,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) ", nativeQuery = true)
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} ", nativeQuery = true)
     IAggregatedAppAssistants getAggregatedAssistantsForTime(@Param("filter") PreventiveActionsFilter filter);
 
     @Query(value ="select SUM(p.oj_m) as ojM, SUM(p.oj_v) as ojV, SUM(p.op_m) as opM, SUM(p.op_v) as opV, SUM(p.os_m) as osM, SUM(p.os_v) as osV, SUM(p.aufr_m) as aufrM, SUM(p.aufr_v) as aufrV " +
@@ -99,7 +99,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) ", nativeQuery = true)
     IAggregatedAppAssistants getAggregatedAssistantsForTimeAndState(@Param("filter") PreventiveActionsFilter filter);
 
@@ -112,7 +112,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
             "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) ", nativeQuery = true)
     IAggregatedAppAssistants getAggregatedAssistantsForTimeAndStateAndProvince(@Param("filter") PreventiveActionsFilter filter);
@@ -126,7 +126,7 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             " SUM(p.po_m) as poM, SUM(p.po_v) as poV, SUM(p.ot_m) as otM,  SUM(p.ot_v) as otV, SUM(p.inf_m) as infM, SUM(p.inf_v) as infV, SUM(p.nin_m) as ninM, SUM(p.nin_v) as ninV, SUM(p.adol_m) as adoM, " +
             " SUM(p.adol_v) as adoV, SUM(p.adol_t_m) as adoTM, SUM(p.adol_t_v) as adoTV, SUM(p.jov_m) as jovM, SUM(p.jov_v) as jovV, SUM(p.adu_m) as aduM, SUM(p.adu_v) as aduV, SUM(p.may_m) as mayM, SUM(p.may_v) as mayV " +
             "from app p " +
-            "where DATE(p.start_date) >= DATE(:#{#filter.startDate}) AND DATE(p.start_date) <= DATE(:#{#filter.endDate}) " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
             "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
             "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) " +
             "and (:#{#filter.district} = 0 or (:#{#filter.district} = p.district_code )) ", nativeQuery = true)

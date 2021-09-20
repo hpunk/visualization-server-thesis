@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.script.ScriptException;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
+@ActiveProfiles("test")
 public class EvolutionServiceImplTest {
 
     @Autowired
@@ -35,12 +37,11 @@ public class EvolutionServiceImplTest {
     private static final String SCHEMA_SCRIPT = "sql/schema.sql";
     private static final String DATA_SCRIPT = "sql/data.sql";
 
-    //only if there is no data available
-    //@Before
-    //public void before() throws ScriptException, SQLException {
-    //    ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(SCHEMA_SCRIPT));
-    //    ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(DATA_SCRIPT));
-    //}
+    @Before
+    public void before() throws ScriptException, SQLException {
+        ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(SCHEMA_SCRIPT));
+        ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(DATA_SCRIPT));
+    }
 
     @Test
     public void getCasesByUbigeoForMonthTestWithNoCasesInDateRangeAtFilter(){
