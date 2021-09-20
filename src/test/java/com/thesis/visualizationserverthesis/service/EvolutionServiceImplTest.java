@@ -35,11 +35,12 @@ public class EvolutionServiceImplTest {
     private static final String SCHEMA_SCRIPT = "sql/schema.sql";
     private static final String DATA_SCRIPT = "sql/data.sql";
 
-    @Before
-    public void before() throws ScriptException, SQLException {
-        ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(SCHEMA_SCRIPT));
-        ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(DATA_SCRIPT));
-    }
+    //only if there is no data available
+    //@Before
+    //public void before() throws ScriptException, SQLException {
+    //    ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(SCHEMA_SCRIPT));
+    //    ScriptUtils.executeSqlScript(jdbc.getDataSource().getConnection(),new ClassPathResource(DATA_SCRIPT));
+    //}
 
     @Test
     public void getCasesByUbigeoForMonthTestWithNoCasesInDateRangeAtFilter(){
