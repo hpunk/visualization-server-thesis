@@ -43,22 +43,24 @@ public class EvolutionServiceImpl implements EvolutionService {
             item.setYear(tempDate.getYear());
             List<CaseByUbigeo> casesByUbigeo = new ArrayList<>();
             //Query para traer data filtrada y agregada por mes - año - provincia o mes-año-departamento
-            LocalDate firstDayMonth = LocalDate.of(item.getYear(),item.getMonth(),1);
-            LocalDate firstDayNextMonth=firstDayMonth.plusMonths(1L);
-            if(filter.getFilterBy().equals("STATE")){
-                val femaleList = cemFemaleDaysRepository.aggregateByState(firstDayMonth,firstDayNextMonth);
-                val maleList = cemMaleDaysRepository.aggregateByState(firstDayMonth,firstDayNextMonth);
-                casesByUbigeo.addAll(generateCasesByUbigeo(femaleList,maleList));
+            LocalDate firstDayMonth = LocalDate.of(item.getYear(), item.getMonth(), 1);
+            LocalDate firstDayNextMonth = firstDayMonth.plusMonths(1L);
+            if (filter.getFilterBy().equals("STATE")) {
+                val femaleList = cemFemaleDaysRepository.aggregateByState(firstDayMonth, firstDayNextMonth);
+                val maleList = cemMaleDaysRepository.aggregateByState(firstDayMonth, firstDayNextMonth);
+                casesByUbigeo.addAll(generateCasesByUbigeo(femaleList, maleList));
 
-            } else if(filter.getFilterBy().equals("PROVINCE")){
-                val femaleList = cemFemaleDaysRepository.aggregateByProvince(firstDayMonth,firstDayNextMonth,filter.getState());
-                val maleList = cemMaleDaysRepository.aggregateByProvince(firstDayMonth,firstDayNextMonth,filter.getState());
-                casesByUbigeo.addAll(generateCasesByUbigeo(femaleList,maleList));
+            } else if (filter.getFilterBy().equals("PROVINCE")) {
+                val femaleList = cemFemaleDaysRepository.aggregateByProvince(firstDayMonth, firstDayNextMonth, filter.getState());
+                val maleList = cemMaleDaysRepository.aggregateByProvince(firstDayMonth, firstDayNextMonth, filter.getState());
+                casesByUbigeo.addAll(generateCasesByUbigeo(femaleList, maleList));
             }
             item.setCasesByUbigeo(casesByUbigeo);
             tempDate = tempDate.plusMonths(1);
+            log.info("el tempDate {}, el endDate {}", tempDate, filter.getEndDate());
             response.add(item);
-        } while(tempDate.getMonth().getValue() <= filter.getEndDate().getMonth().getValue() || tempDate.getYear() != filter.getEndDate().getYear());
+        } while((tempDate.getYear()*100 + tempDate.getMonth().getValue()) <= (filter.getEndDate().getYear()*100 + filter.getEndDate().getMonth().getValue()) );
+        //} while(tempDate.getMonth().getValue() <= filter.getEndDate().getMonth().getValue() || tempDate.getYear() <= filter.getEndDate().getYear());
         return response;
     }
 
