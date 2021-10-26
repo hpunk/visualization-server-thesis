@@ -203,4 +203,74 @@ public class ImpactServiceImplTest {
         assertEquals(9L, response.getPsychologicalV().size());
         assertEquals(Optional.of(1L).get(), response.getSexualV().get(2));
     }
+
+    @Test
+    public void getAppPerDayTestForAFilterWithNoStateRequested(){
+        //given
+        PreventiveActionsFilter filter = new PreventiveActionsFilter();
+        filter.setStartDate(LocalDate.of(2017,1,1));
+        filter.setEndDate(LocalDate.of(2017,1,30));
+        filter.setDistrict(0L);
+        filter.setProvince(0L);
+        filter.setState(0L);
+
+        //when
+        val response = impactService.getAppPerDay(filter);
+
+        //then
+        log.info("el response {}",response);
+        assertEquals(Optional.of(2).get(), response.get(19).getCount());
+    }
+
+    @Test
+    public void getAppPerDayTestForAFilterWithStateRequested(){
+        //given
+        PreventiveActionsFilter filter = new PreventiveActionsFilter();
+        filter.setStartDate(LocalDate.of(2017,1,1));
+        filter.setEndDate(LocalDate.of(2017,12,30));
+        filter.setDistrict(0L);
+        filter.setProvince(0L);
+        filter.setState(4L);
+
+        //when
+        val response = impactService.getAppPerDay(filter);
+
+        //then
+        log.info("el response {}",response);
+        assertEquals(Optional.of(1).get(), response.get(29).getCount());
+    }
+
+    @Test
+    public void getAppPerDayTestForAFilterWithStateAndProvinceRequested(){
+        //given
+        PreventiveActionsFilter filter = new PreventiveActionsFilter();
+        filter.setStartDate(LocalDate.of(2017,11,1));
+        filter.setEndDate(LocalDate.of(2017,12,30));
+        filter.setDistrict(0L);
+        filter.setProvince(302L);
+        filter.setState(3L);
+
+        //when
+        val response = impactService.getAppPerDay(filter);
+
+        //then
+        assertEquals(Optional.of(1).get(), response.get(19).getCount());
+    }
+
+    @Test
+    public void getAppPerDayTestForAFilterWithStateAndProvinceAndDistrictRequested(){
+        //given
+        PreventiveActionsFilter filter = new PreventiveActionsFilter();
+        filter.setStartDate(LocalDate.of(2017,1,1));
+        filter.setEndDate(LocalDate.of(2017,12,30));
+        filter.setDistrict(30109L);
+        filter.setProvince(301L);
+        filter.setState(3L);
+
+        //when
+        val response = impactService.getAppPerDay(filter);
+
+        //then
+        assertEquals(Optional.of(1).get(), response.get(19).getCount());
+    }
 }

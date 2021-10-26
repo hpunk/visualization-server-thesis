@@ -1,9 +1,6 @@
 package com.thesis.visualizationserverthesis.service.impl;
 
-import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesDTO;
-import com.thesis.visualizationserverthesis.model.api.ImpactViolenceCasesFilter;
-import com.thesis.visualizationserverthesis.model.api.PreventiveActionSearchResponse;
-import com.thesis.visualizationserverthesis.model.api.PreventiveActionsFilter;
+import com.thesis.visualizationserverthesis.model.api.*;
 import com.thesis.visualizationserverthesis.repository.impact.CEMFemaleDaysRepository;
 import com.thesis.visualizationserverthesis.repository.impact.CEMMaleDaysRepository;
 import com.thesis.visualizationserverthesis.repository.impact.PreventiveActionRepository;
@@ -109,5 +106,38 @@ public class ImpactServiceImpl implements ImpactService {
         }
         return new ImpactViolenceCasesDTO(dates,maleCases,femaleCases,filter.getAppDateStart());
 
+    }
+
+    @Override
+    public List<AppPerDay> getAppPerDay(PreventiveActionsFilter filter){
+        List<AppPerDay> response = new ArrayList<>();
+        PreventiveActionsFilter auxFilter = new PreventiveActionsFilter();
+        auxFilter.setProvince(filter.getProvince());
+        auxFilter.setDistrict(filter.getDistrict());
+        auxFilter.setState(filter.getState());
+        for(LocalDate auxDate = filter.getStartDate(); auxDate.isBefore(filter.getEndDate().plusDays(1l)) ; auxDate = auxDate.plusDays(1l)){
+            AppPerDay appPerDay = new AppPerDay();
+
+            appPerDay.setDate(auxDate);
+
+            auxFilter.setStartDate(auxDate);
+            auxFilter.setEndDate(auxDate);
+            if(filter.getDistrict() != 0L){
+                appPerDay.setPreventiveActions(preventiveActionRepository.countPreventiveActionsForTimeAndUbigeo(auxFilter).stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+                appPerDay.setCount(new PreventiveActionCounter(preventiveActionRepository.getTotalPreventiveActionsForTimeAndUbigeo(auxFilter)).getCount());
+            } else if(filter.getProvince() != 0L){
+                appPerDay.setPreventiveActions(preventiveActionRepository.countPreventiveActionsForTimeAndProvince(auxFilter).stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+                appPerDay.setCount(new PreventiveActionCounter(preventiveActionRepository.getTotalPreventiveActionsForTimeAndProvince(auxFilter)).getCount());
+            } else if(filter.getState() != 0L){
+                appPerDay.setPreventiveActions(preventiveActionRepository.countPreventiveActionsForTimeAndState(auxFilter).stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+                appPerDay.setCount(new PreventiveActionCounter(preventiveActionRepository.getTotalPreventiveActionsForTimeAndState(auxFilter)).getCount());
+            } else {
+                appPerDay.setPreventiveActions(preventiveActionRepository.countPreventiveActionsForTime(auxFilter).stream().map(PreventiveActionCounter::new).collect(Collectors.toList()));
+                appPerDay.setCount(new PreventiveActionCounter(preventiveActionRepository.getTotalPreventiveActionsForTime(auxFilter)).getCount());
+            }
+            response.add(appPerDay);
+        }
+
+        return response;
     }
 }

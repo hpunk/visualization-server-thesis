@@ -1,7 +1,9 @@
 package com.thesis.visualizationserverthesis.utils;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 public class PreventiveActionCounter {
     private Integer count;

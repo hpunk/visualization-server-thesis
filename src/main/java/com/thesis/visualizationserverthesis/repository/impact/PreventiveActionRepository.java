@@ -131,4 +131,30 @@ public interface PreventiveActionRepository extends JpaRepository<PreventiveActi
             "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) " +
             "and (:#{#filter.district} = 0 or (:#{#filter.district} = p.district_code )) ", nativeQuery = true)
     IAggregatedAppAssistants getAggregatedAssistantsForTimeAndStateAndProvinceAndDistrict(@Param("filter") PreventiveActionsFilter filter);
+
+    @Query(value ="select COUNT(p.*) as count " +
+            "from app p " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
+            "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
+            "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) " +
+            "and (:#{#filter.district} = 0 or (:#{#filter.district} = p.district_code )) ", nativeQuery = true)
+    IPreventiveActionCounterProjection getTotalPreventiveActionsForTimeAndUbigeo(@Param("filter") PreventiveActionsFilter filter);
+
+    @Query(value ="select COUNT(p.*) as count " +
+            "from app p " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
+            "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) " +
+            "and (:#{#filter.province} = 0  or (:#{#filter.province} = p.province_code )) ", nativeQuery = true)
+    IPreventiveActionCounterProjection getTotalPreventiveActionsForTimeAndProvince(@Param("filter") PreventiveActionsFilter filter);
+
+    @Query(value ="select COUNT(p.*) as count " +
+            "from app p " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} " +
+            "and (:#{#filter.state} = 0 or (:#{#filter.state} = p.state_code) ) ", nativeQuery = true)
+    IPreventiveActionCounterProjection getTotalPreventiveActionsForTimeAndState(@Param("filter") PreventiveActionsFilter filter);
+
+    @Query(value ="select COUNT(p.*) as count " +
+            "from app p " +
+            "where p.start_date >= :#{#filter.startDate} AND p.start_date <= :#{#filter.endDate} ", nativeQuery = true)
+    IPreventiveActionCounterProjection getTotalPreventiveActionsForTime(@Param("filter") PreventiveActionsFilter filter);
 }
