@@ -29,6 +29,11 @@ public class EvolutionController extends BaseController{
         this.service = service;
     }
 
+    @GetMapping("/marco")
+    public String testConnection(){
+        return String.format("polo");
+    }
+
     @GetMapping("/evolution/cases-by-month")
     public List<CasesByUbigeoForMonth> getCasesByUbigeoForMonth(@RequestParam Map<String,Object> searchParams){
         val filter = mapQueryTo(searchParams, EvolutionCasesByMonthFilter.class);
